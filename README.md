@@ -1,6 +1,8 @@
 # React Weather App
 
-A Fun React Weather App
+A Fun React Weather App.
+
+Live demo <a href="https://dn-weather-app.herokuapp.com/" target="_blank">here</a>.
 
 ## How to run?
 
