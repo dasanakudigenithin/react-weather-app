@@ -1,0 +1,294 @@
+/*Lets start with the cloud formation rather*/
+
+/*The container will also serve as the SKY*/
+
+/* Loader */
+#wrapper {
+  width: 600px;
+  margin: 20px auto;
+}
+
+path.a {
+  fill: #aaa;
+  stroke: #ddd;
+  stroke-width: 0.5;
+}
+
+
+#animationContainer{
+	position: absolute;
+    width: 100%;
+	padding: 100px 0;
+	/* background: #c9dbe9; */
+	background: -webkit-linear-gradient(top, #c9dbe9 0%, #fff 100%);
+	background: -linear-gradient(top, #c9dbe9 0%, #fff 100%);
+	background: -moz-linear-gradient(top, #c9dbe9 0%, #fff 100%);
+}
+
+.sun {
+	position: absolute;
+	display:inline-block;
+	margin-left:100%;
+  border-radius:50%;
+  height:100px;
+  width:100px;
+  background:orange;
+  box-shadow: 0 0 10px orange,
+                0 0 10px orange,
+                0 0 30px yellow,
+                inset 0 0 40px yellow;
+  z-index:-99;
+}
+
+/*Drawing the half moon by manipulating the div box*/
+.moon {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  height: 100px;
+  width: 100px;
+  box-shadow: -15px 15px 0 5px white;
+  border-radius: 50%;
+}
+
+/*Time to finalise the cloud shape*/
+.cloud {
+	margin-top: 100px;
+	width: 200px; height: 60px;
+	background: #fff;
+	
+	border-radius: 200px;
+	-moz-border-radius: 200px;
+	-webkit-border-radius: 200px;
+	
+	position: absolute; 
+}
+
+.cloud:before, .cloud:after {
+	content: '';
+	position: absolute; 
+	background: #fff;
+	width: 100px; height: 80px;
+	position: absolute; top: -15px; left: 10px;
+	
+	border-radius: 100px;
+	-moz-border-radius: 100px;
+	-webkit-border-radius: 100px;
+	
+	-webkit-transform: rotate(30deg);
+	transform: rotate(30deg);
+	-moz-transform: rotate(30deg);
+}
+
+.cloud:after {
+	width: 120px; height: 120px;
+	top: -55px; left: auto; right: 15px;
+}
+
+/*Time to animate*/
+.s1 {
+	animation: movesun 25s linear  infinite;
+	-webkit-animation: movesun 25s linear  infinite;
+	-moz-animation: movesun 25s linear  infinite;
+	-o-animation: movesun 25s linear  infinite;
+}
+
+/*Time to animate*/
+.x1 {
+	animation: moveclouds 15s linear infinite;
+	-webkit-animation: moveclouds 15s linear infinite;
+	-moz-animation: moveclouds 15s linear infinite;
+	-o-animation: moveclouds 15s linear infinite;
+}
+
+/*variable speed, opacity, and position of clouds for realistic effect*/
+.x2 {
+	left: 200px;
+	
+	-webkit-transform: scale(0.6);
+	-moz-transform: scale(0.6);
+	transform: scale(0.6);
+	opacity: 0.6; /*opacity proportional to the size*/
+	
+	/*Speed will also be proportional to the size and opacity*/
+	/*More the speed. Less the time in 's' = seconds*/
+	animation: moveclouds 25s linear infinite;
+	-webkit-animation: moveclouds 25s linear infinite;
+	-moz-animation: moveclouds 25s linear infinite;
+	-o-animation: moveclouds 25s linear infinite;
+}
+
+.x3 {
+	left: -250px; top: 220px;
+	
+	-webkit-transform: scale(0.8);
+	-moz-transform: scale(0.8);
+	transform: scale(0.8);
+	opacity: 0.8; /*opacity proportional to the size*/
+	
+	animation: moveclouds 20s linear infinite;
+	-webkit-animation: moveclouds 20s linear infinite;
+	-moz-animation: moveclouds 20s linear infinite;
+	-o-animation: moveclouds 20s linear infinite;
+}
+
+.x4 {
+	left: 470px; top: 400px;
+	
+	-webkit-transform: scale(0.75);
+	-moz-transform: scale(0.75);
+	transform: scale(0.75);
+	opacity: 0.75; /*opacity proportional to the size*/
+	
+	animation: moveclouds 18s linear infinite;
+	-webkit-animation: moveclouds 18s linear infinite;
+	-moz-animation: moveclouds 18s linear infinite;
+	-o-animation: moveclouds 18s linear infinite;
+}
+
+.x5 {
+	left: -150px; top: -80px;
+	
+	-webkit-transform: scale(0.8);
+	-moz-transform: scale(0.8);
+	transform: scale(0.8);
+	opacity: 0.8; /*opacity proportional to the size*/
+	
+	animation: moveclouds 20s linear infinite;
+	-webkit-animation: moveclouds 20s linear infinite;
+	-moz-animation: moveclouds 20s linear infinite;
+	-o-animation: moveclouds 20s linear infinite;
+}
+
+@keyframes movesun {
+	0% {margin-left: -200px;margin-top: 200px;}
+	100% {margin-left: 1500px;margin-top: 1px;}
+}
+
+@keyframes moveclouds {
+	0% {margin-left: 1400px;}
+	100% {margin-left: -1000px;}
+}
+
+@-webkit-keyframes moveclouds {
+	0% {margin-left: 1000px;}
+	100% {margin-left: -1000px;}
+}
+@-moz-keyframes moveclouds {
+	0% {margin-left: 1000px;}
+	100% {margin-left: -1000px;}
+}
+@-o-keyframes moveclouds {
+	0% {margin-left: 1000px;}
+	100% {margin-left: -1000px;}
+}
+
+
+/*  */
+
+
+.rain {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.rain.back-row {
+  display: block;
+  bottom: 60px;
+  opacity: 0.5;
+}
+
+.drop {
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, #ffffff 100%); 
+  position: absolute;
+  bottom: 100%;
+  width: 1px;
+  height: 30px;
+  pointer-events: none;
+  animation: drop 1s linear infinite;
+}
+
+@keyframes drop {
+  0% {
+    transform: translateY(0vh);
+  }
+  75% {
+    transform: translateY(85vh);
+  }
+  100% {
+    transform: translateY(85vh);
+  }
+}
+
+.stem {
+  width: 1px;
+  height: 60%;
+  margin-left: 4px;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.25));
+  animation: stem 0.5s linear infinite;
+}
+
+@keyframes stem {
+  0% {
+    opacity: 1;
+  }
+  65% {
+    opacity: .7;
+  }
+  75% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+
+/*  */
+
+@keyframes move-twink-back {
+    from {background-position:0 0;}
+    to {background-position:-10000px 5000px;}
+}
+@-webkit-keyframes move-twink-back {
+    from {background-position:0 0;}
+    to {background-position:-10000px 5000px;}
+}
+@-moz-keyframes move-twink-back {
+    from {background-position:0 0;}
+    to {background-position:-10000px 5000px;}
+}
+@-ms-keyframes move-twink-back {
+    from {background-position:0 0;}
+    to {background-position:-10000px 5000px;}
+}
+
+
+.stars, .twinkling {
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  width:100%;
+  height:100vh;
+  display:block;
+  animation: move-twink-back 300s linear infinite;
+}
+
+.stars {
+  background:#000 url(http://www.script-tutorials.com/demos/360/images/stars.png) repeat top center;
+  z-index:0;
+}
+
+.twinkling{
+  background:transparent url(http://www.script-tutorials.com/demos/360/images/twinkling.png) repeat top center;
+  z-index:0;
+
+  -moz-animation:move-twink-back 200s linear infinite;
+  -ms-animation:move-twink-back 200s linear infinite;
+  -o-animation:move-twink-back 200s linear infinite;
+  -webkit-animation:move-twink-back 200s linear infinite;
+  animation:move-twink-back 200s linear infinite;
+}
