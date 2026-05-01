@@ -7,7 +7,10 @@ Live demo <a href="https://dn-weather-app.herokuapp.com/" target="_blank">here</
 ## How to run?
 
 ### Acquire API Key
+
 Go to [Open Weather API](https://openweathermap.org/) and sign up. Post confirmation, you will recieve a API key. Paste the API key to `REACT_APP_OPEN_WEATHER_API_KEY` var in .env
+
+### `npm install`
 
 ### `npm start`
 
