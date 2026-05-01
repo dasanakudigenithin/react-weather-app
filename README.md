@@ -2,7 +2,7 @@
 
 A Fun React Weather App.
 
-Live demo <a href="https://dn-weather-app.herokuapp.com/" target="_blank">here</a>.
+Live demo <a href="[https://dn-weather-app.herokuapp.com/](https://react-weather-app-git-main-nithin-d-js-projects-3ca4efc9.vercel.app/)" target="_blank">here</a>.
 
 ## How to run?
 
