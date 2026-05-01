@@ -25,6 +25,7 @@ const Globe = ({ size }) => {
 
     useEffect(() => {
         projectWroldGlobe();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
 
@@ -36,6 +37,7 @@ const Globe = ({ size }) => {
         return () => {
             clearInterval(intervalId); //This is important
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [rotation]);
 
     return (<svg width={size} height={size} >
