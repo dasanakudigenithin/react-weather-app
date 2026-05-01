@@ -1,7 +1,7 @@
 import axios from "axios";
 import { axiosInstance, API_KEY } from "./axios";
 
-const appid = API_KEY || 'a5fdf339b9fe1882d4f2396261a814fc';
+const appid = API_KEY;
 
 export async function searchLocations(query) {
     let response = await axios.get('https://api.openweathermap.org/geo/1.0/direct', {
