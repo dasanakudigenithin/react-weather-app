@@ -12,10 +12,10 @@ const WeatherAnimation = ({ weather, isDay, moonSize }) => {
                 <Rainy />
             }
             {weather && weather.toLowerCase().includes("cloud") &&
-                <Cloudy />
+                (isDay ? <Cloudy /> : <><Moon moonSize={0.6} /><Cloudy /></>)
             }
-            {weather && weather.toLowerCase().includes("clear") &&
-                (isDay ? <Sunny /> : <Moon moonSize={moonSize} />)
+            {weather && (weather.toLowerCase().includes("clear") || weather.toLowerCase().includes("snow")) &&
+                (isDay ? <Sunny /> : <Moon moonSize={0.6} />)
             }
         </div>
     )

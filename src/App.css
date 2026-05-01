@@ -1,8 +1,21 @@
-*{ margin: 0; padding: 0;}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
 body {
-	/*To hide the horizontal scroller appearing during the animation*/
-	/* overflow-y: hidden; */
   overflow-x: hidden;
-  background: #76aeda;
-  }
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  transition: background 0.6s ease;
+  background: linear-gradient(160deg, #56CCF2 0%, #2F80ED 100%) !important;
+  min-height: 100vh;
+  background-attachment: fixed !important;
+}
+
+body.night-mode {
+  background: linear-gradient(160deg, #0f2027 0%, #203a43 50%, #2c5364 100%) !important;
+  background-attachment: fixed !important;
+}

@@ -1,12 +1,11 @@
-import React, { useState } from "react";
-import dateformat from "dateformat";
-import { getCurrentWeather, getWeatherFor5Days } from "../apis/getCurrentWeather";
+import React, { useEffect, useState } from "react";
+import { getCurrentWeatherByCoords, getWeatherFor5Days } from "../apis/getCurrentWeather";
 import WeatherAnimation from "../components/WeatherAnimation";
-import TemperatureChart from "../components/TemperatureChart";
 import Loader from "../components/Loader";
 import { makeStyles } from "@material-ui/core";
 import Header from "../components/Header";
-import TextInput from "../components/TextInput";
+import Footer from "../components/Footer";
+import LocationSearch from "../components/LocationSearch";
 import WeatherSumarryContainer from "./WeatherSumarryContainer";
 import DailyWeatherContainer from "./DailyWeatherContainer";
 import HourlyWeatherContainer from "./HourlyWeatherContainer";
@@ -18,124 +17,172 @@ const useStyles = makeStyles({
         left: 0,
         right: 0,
         textAlign: 'center',
-        padding: '.2em',
+        padding: '0.5em 1em',
         display: 'flex',
         flexDirection: 'column',
-        fontSize: 'calc(100% - 2px)',
         alignItems: 'center',
-        height: '99vh',
+        minHeight: '100vh',
+        color: '#fff',
     },
     errorMessage: {
-        fontStyle: 'italic',
-        fontWeight: 600,
-        fontSize: '1.6em',
-        padding: '1em',
+        fontWeight: 500,
+        fontSize: '1.1rem',
+        padding: '1.5em',
         margin: '1em',
-    }
-
+        borderRadius: '12px',
+        background: 'rgba(255,60,60,0.15)',
+        backdropFilter: 'blur(8px)',
+    },
+    tabContainer: {
+        display: 'flex',
+        gap: '0',
+        marginTop: '1em',
+        borderRadius: '12px',
+        overflow: 'hidden',
+    },
+    tab: {
+        padding: '0.6em 1.5em',
+        fontSize: '0.8rem',
+        fontWeight: 600,
+        cursor: 'pointer',
+        border: 'none',
+        outline: 'none',
+        transition: 'background 0.2s ease, opacity 0.2s ease',
+        letterSpacing: '0.03em',
+    },
 });
 
 const HomeContainer = () => {
-
-    let isDay = Number(dateformat(new Date().toISOString(), 'HH')) < 19 ? true : false;
-    document.body.style.backgroundColor = isDay ? "#76aeda" : "#000";
-
     const classes = useStyles();
 
+    const [isDay, setIsDay] = useState(true);
     const [errMsg, setErrMsg] = useState("");
-    const [searchValue, setSearchValue] = useState("");
     const [data, setData] = useState({});
     const [hourlyData, setHourlyData] = useState([]);
     const [fiveDaysData, setFiveDaysData] = useState({});
     const [loading, setLoading] = useState(true);
+    const [activeTab, setActiveTab] = useState('hourly');
 
-    const handleSearch = async (event) => {
+    useEffect(() => {
+        document.body.className = isDay ? 'day-mode' : 'night-mode';
+    }, [isDay]);
+
+    useEffect(() => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    handleLocationSelect({
+                        lat: position.coords.latitude,
+                        lon: position.coords.longitude,
+                    });
+                },
+                () => { setLoading(false); }
+            );
+        } else {
+            setLoading(false);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const handleLocationSelect = async (location) => {
         try {
-            if (event.key === 'Enter') {
-                setErrMsg("");
-                setLoading(true);
-                let data = await getCurrentWeather(searchValue);
-                setData(data);
-                let fiveDays_Data = await getWeatherFor5Days(searchValue, data.coord.lat, data.coord.lon);
-                let hourlyData = fiveDays_Data.hourly.filter(y => {
-                    if (new Date(y.dt * 1000).getDate() === new Date().getDate())
-                        return y;
-                });
-                setHourlyData(hourlyData);
-                setFiveDaysData(fiveDays_Data);
-                setLoading(false);
-            }
+            setErrMsg("");
+            setLoading(true);
+            setActiveTab('hourly');
+            const { lat, lon } = location;
+            let data = await getCurrentWeatherByCoords(lat, lon);
+            const now = Math.floor(Date.now() / 1000);
+            const cityNow = now + data.timezone + new Date().getTimezoneOffset() * 60;
+            const sunrise = data.sys.sunrise + data.timezone + new Date().getTimezoneOffset() * 60;
+            const sunset = data.sys.sunset + data.timezone + new Date().getTimezoneOffset() * 60;
+            setIsDay(cityNow >= sunrise && cityNow <= sunset);
+            setData(data);
+            let result = await getWeatherFor5Days(null, lat, lon);
+            // Next 24 hours (up to 8 entries at 3-hour intervals)
+            let hourly = result.list.slice(0, 8);
+            // Unique days excluding today
+            const list = [];
+            result.list.forEach(y => {
+                if (new Date(y.dt * 1000).getDate() !== new Date().getDate()) {
+                    if (!list.some(a => new Date(a.dt * 1000).getDate() === new Date(y.dt * 1000).getDate()))
+                        list.push(y);
+                }
+            });
+            result.newList = list;
+            setHourlyData(hourly);
+            setFiveDaysData(result);
+            setLoading(false);
         } catch (e) {
-            if (e.message.includes("404")) {
-                setErrMsg(`City ${searchValue} not found.`)
-            }
-            else {
-                setErrMsg("Something went wrong. Please try again.");
-            }
+            setErrMsg(e.message.includes("404") ? `Location not found.` : "Something went wrong. Please try again.");
             setLoading(false);
         }
     }
-
-    const handleInput = (event) => {
-        setSearchValue(event.target.value);
-    }
-
-    const Home = (
-        <div className={classes.container} style={{ color: isDay ? 'black' : 'white' }}>
-            <Header />
-            <TextInput
-                isDay={isDay}
-                searchValue={searchValue}
-                handleSearch={handleSearch}
-                handleInput={handleInput}
-            />
-            {loading ?
-                <Loader />
-                :
-                errMsg ?
-                    <>
-                        <Loader />
-                        <div
-                            className={classes.errorMessage}
-                            style={{ color: isDay ? "#d40000" : "#ff2222" }}
-                        >
-                            {errMsg}
-                        </div>
-                    </>
-                    :
-                    <>
-                        {!loading && data && data.weather &&
-                            <WeatherSumarryContainer data={data} />}
-
-                        {!loading && hourlyData &&
-                            
-                            <>
-                                <TemperatureChart hourlyData={hourlyData} />
-                                <HourlyWeatherContainer hourlyData={hourlyData} isDay={isDay} />
-                            </>}
-
-                        {!loading && fiveDaysData && fiveDaysData.daily && fiveDaysData.daily.length > 0 &&
-                            <DailyWeatherContainer fiveDaysData={fiveDaysData} isDay={isDay} />}
-                    </>
-            }
-        </div >
-    )
 
     return (
         <>
             {!loading &&
                 <WeatherAnimation
                     isDay={isDay}
-                    weather={hourlyData && hourlyData.length > 0
-                        && hourlyData[0].weather && hourlyData[0].weather[0].main}
+                    weather={data && data.weather && data.weather[0] && data.weather[0].main}
                     moonSize={fiveDaysData && fiveDaysData.daily
                         && fiveDaysData.daily.length > 0 && fiveDaysData.daily[0].moon_phase}
                 />
             }
-            {Home}
+            <div className={classes.container} style={{ color: isDay ? '#1a1a2e' : '#f0f0f0' }}>
+                <Header isDay={isDay} />
+                <LocationSearch isDay={isDay} onSelect={handleLocationSelect} />
+                {loading ?
+                    <Loader />
+                    :
+                    errMsg ?
+                        <>
+                            <Loader />
+                            <div className={classes.errorMessage} style={{ color: isDay ? '#c0392b' : '#ff6b6b' }}>
+                                {errMsg}
+                            </div>
+                        </>
+                        :
+                        <>
+                            {data && data.weather &&
+                                <WeatherSumarryContainer data={data} isDay={isDay} timezoneOffset={data.timezone} />}
+                            <div className={classes.tabContainer}>
+                                <button
+                                    className={classes.tab}
+                                    onClick={() => setActiveTab('hourly')}
+                                    style={{
+                                        background: activeTab === 'hourly'
+                                            ? (isDay ? 'rgba(255,255,255,0.65)' : 'rgba(255,255,255,0.15)')
+                                            : (isDay ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.05)'),
+                                        color: isDay ? '#1a1a2e' : '#f0f0f0',
+                                        opacity: activeTab === 'hourly' ? 1 : 0.6,
+                                    }}
+                                >
+                                    Next Hours
+                                </button>
+                                <button
+                                    className={classes.tab}
+                                    onClick={() => setActiveTab('daily')}
+                                    style={{
+                                        background: activeTab === 'daily'
+                                            ? (isDay ? 'rgba(255,255,255,0.65)' : 'rgba(255,255,255,0.15)')
+                                            : (isDay ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.05)'),
+                                        color: isDay ? '#1a1a2e' : '#f0f0f0',
+                                        opacity: activeTab === 'daily' ? 1 : 0.6,
+                                    }}
+                                >
+                                    5-Day
+                                </button>
+                            </div>
+                            {activeTab === 'hourly' && hourlyData &&
+                                <HourlyWeatherContainer hourlyData={hourlyData} isDay={isDay} timezoneOffset={data.timezone} />}
+                            {activeTab === 'daily' && fiveDaysData && fiveDaysData.list && fiveDaysData.list.length > 0 &&
+                                <DailyWeatherContainer fiveDaysData={fiveDaysData} isDay={isDay} timezoneOffset={data.timezone} />}
+                        </>
+                }
+                <Footer isDay={isDay} />
+            </div>
         </>
-
-    )
-}
+    );
+};
 
 export default HomeContainer;

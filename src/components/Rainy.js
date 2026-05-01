@@ -12,17 +12,20 @@ const Rainy = () => {
             increment += randoFiver;
 
             drops.push(<div
+                key={'front-' + increment}
                 className="drop"
                 style={{
-                    left: + increment + '%',
-                    bottom: + ({ randoFiver } + randoFiver - 1 + 100) + '%;',
+                    left: increment + '%',
+                    bottom: (randoFiver + randoFiver - 1 + 100) + '%',
                     animationDuration: randoHundo + 's'
                 }}>
                 <div
                     className="stem"
-                    style={{
-                        animationDuration: randoHundo + 's'
-                    }}>
+                    style={{ animationDuration: randoHundo + 's' }}>
+                </div>
+                <div
+                    className="splat"
+                    style={{ animationDuration: randoHundo + 's' }}>
                 </div>
             </div>);
         }
@@ -40,19 +43,21 @@ const Rainy = () => {
 
             backDrops.push(
                 <div
+                    key={'back-' + increment}
                     className="drop"
                     style={{
-                        right: + increment + '%',
-                        bottom: + (randoFiver + randoFiver - 1 + 100) + '%',
+                        right: increment + '%',
+                        bottom: (randoFiver + randoFiver - 1 + 100) + '%',
                         animationDuration: randoHundo + 's'
                     }}
                 >
                     <div
                         className="stem"
-                        style={{
-                            animationDuration: randoHundo + 's'
-                        }}
-                    >
+                        style={{ animationDuration: randoHundo + 's' }}>
+                    </div>
+                    <div
+                        className="splat"
+                        style={{ animationDuration: randoHundo + 's' }}>
                     </div>
                 </div>);
         }

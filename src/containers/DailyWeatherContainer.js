@@ -2,72 +2,60 @@ import { makeStyles } from "@material-ui/core";
 import React from "react";
 import Card from "../components/Card";
 import WeatherIcon from "../components/WeatherIcon";
-import { weatherTitle } from "../utils/weatherUtils"
-import { getFormatedTime, getFormatedDate } from "./../utils/commonUtils";
+import { weatherTitle } from "../utils/weatherUtils";
+import { getFormatedDate } from "./../utils/commonUtils";
 
 const useStyles = makeStyles({
-    nestedFlexContainer: {
+    container: {
         display: "flex",
         flexDirection: "row",
-        justifyContent: 'center'
-    },
-    heading: {
-        margin: '0',
-        padding: '1em'
-    },
-    spacing: {
-        padding: '.3em'
-    },
-    smallFlexContainer: {
-        display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center',
-        padding: '.1em'
-    }
-})
+        flexWrap: 'wrap',
+        gap: '0.6em',
+        padding: '0.5em 0 2em',
+        maxWidth: '90vw',
+    },
+    date: {
+        fontSize: '0.75rem',
+        fontWeight: 700,
+        opacity: 0.85,
+        marginBottom: '0.5em',
+    },
+    weather: {
+        fontSize: '0.7rem',
+        opacity: 0.9,
+        fontWeight: 500,
+        margin: '0.4em 0',
+    },
+    temp: {
+        fontSize: '1.1rem',
+        fontWeight: 800,
+        margin: '0.3em 0',
+    },
+    feels: {
+        fontSize: '0.65rem',
+        opacity: 0.7,
+        fontWeight: 500,
+    },
+});
 
-
-const DailyWeatherContainer = ({ fiveDaysData, isDay }) => {
+const DailyWeatherContainer = ({ fiveDaysData, isDay, timezoneOffset }) => {
     const classes = useStyles();
     return (
-        < div className={classes.nestedFlexContainer}>
-            {fiveDaysData.daily.map((item, index) => {
-                if (index !== 0) {
-                    return (
-                        <Card
-                            backgroundColor={isDay ? "#e5e5e5" : "#454545"}
-                            boxShadow={isDay ? ".07em .07em .07em .07em #d1d1d1" : ".07em .07em .07em .07em #787878"}
-                            key={item.dt}>
-                            <h4 className={classes.heading}>{getFormatedDate(item.dt)}</h4>
-                            <div className={classes.spacing}>
-                                <WeatherIcon weather={item.weather[0].main} />
-                                <br />
-                                {weatherTitle(item.weather[0].main)}
-                            </div>
-                            <div className={classes.spacing}>
-                                {item.temp.day}&deg;C
-                            </div>
-                            <div className={classes.spacing}>
-                                Feels {item.feels_like.day}&deg;C
-                            </div>
-                            <div className={classes.smallFlexContainer}>
-                                <WeatherIcon smallIcon={true} weather='Sunrise' />
-                                &nbsp;
-                                {getFormatedTime(item.sunrise)}
-                            </div>
-                            <div className={classes.smallFlexContainer}>
-                                <WeatherIcon smallIcon={true} weather='Sunset' />
-                                &nbsp;
-                                {getFormatedTime(item.sunset)}
-                            </div>
-                        </Card>
-                    );
-                }
-            }
-            )}
+        <div className={classes.container}>
+            {fiveDaysData.newList.map((item) => {
+                return (
+                    <Card isDay={isDay} height="10em" width="6.5em" key={item.dt}>
+                        <div className={classes.date}>{getFormatedDate(item.dt, timezoneOffset)}</div>
+                        <WeatherIcon weather={item.weather[0].main} isDay={isDay} />
+                        <div className={classes.weather}>{weatherTitle(item.weather[0].main)}</div>
+                        <div className={classes.temp}>{Math.round(item.main.temp)}&deg;</div>
+                        <div className={classes.feels}>Feels {Math.round(item.main.feels_like)}&deg;</div>
+                    </Card>
+                );
+            })}
         </div>
-    )
-
-}
+    );
+};
 
 export default DailyWeatherContainer;

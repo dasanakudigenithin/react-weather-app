@@ -7,8 +7,8 @@ const Moon = ({ moonSize }) => {
     const size = total * moonSize;
     return (
         <>
-            <div class="stars"></div>
-            <div class="twinkling"></div>
+            <div className="stars"></div>
+            <div className="twinkling"></div>
             <div
                 style={{
                     boxShadow: size + "px 15px 0 5px white"

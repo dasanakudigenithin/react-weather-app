@@ -3,9 +3,10 @@ import { WiDaySunny, WiCloudy, WiRainMix, WiSunrise, WiSunset } from "weather-ic
 
 const iconSize = 60;
 const iconSmallSize = 30;
-const color = '#FFA500';
 
-const WeatherIcon = ({ weather, smallIcon, style }) => {
+const WeatherIcon = ({ weather, smallIcon, style, isDay }) => {
+    const color = isDay === false ? '#f0f0f0' : '#2c3e50';
+
     switch (weather) {
         case "Clouds": return <WiCloudy style={style} size={smallIcon ? iconSmallSize : iconSize} color={color} />
         case "Rain": return <WiRainMix style={style} size={smallIcon ? iconSmallSize : iconSize} color={color} />
@@ -14,7 +15,6 @@ const WeatherIcon = ({ weather, smallIcon, style }) => {
         default:
             return <WiDaySunny style={style} size={smallIcon ? iconSmallSize : iconSize} color={color} />
     }
-
 }
 
 export default WeatherIcon;
