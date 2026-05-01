@@ -2,7 +2,7 @@
 
 A Fun React Weather App.
 
-Live demo <a href="https://react-weather-app-git-main-nithin-d-js-projects-3ca4efc9.vercel.app/" target="_blank">here</a>.
+Live demo <a href="https://react-weather-app-liart-delta.vercel.app/" target="_blank">here</a>.
 
 ## How to run?
 
